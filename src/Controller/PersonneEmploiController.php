@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\EmploisRepository;
+use App\Repository\PersonnesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,5 +44,26 @@ class PersonneEmploiController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(['message' => 'Erreur lors de la récupération des personnes par entreprise', 'error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    #[Route('/personnesSansEmploi', name: 'personnes_sans_entreprise', methods: ['GET'])]
+    public function getPersonneSansEmploi(PersonnesRepository $personneRepository, SerializerInterface $serializer, Request $request)
+    {
+        try {
+            $params = json_decode($request->getContent(), true);
+            $dateMin = $params['dateDebut'];
+            $dateMax = $params['dateFin'];
+
+            if ($dateMin !== null && $dateMax !== null) {
+                $personnesSansEmploi = $personneRepository->findPersonnesSansEmploi($dateMin, $dateMax);
+
+                $data = $serializer->serialize($personnesSansEmploi, 'json', ['groups' => 'personnes']);
+                return new JsonResponse($data, 200);
+            }
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
+
+        return $this->json(['message' => 'Paramètre manquant']);
     }
 }

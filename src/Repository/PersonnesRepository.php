@@ -29,4 +29,17 @@ class PersonnesRepository extends ServiceEntityRepository
             $em->flush();
         }
     }
+
+    public function findPersonnesSansEmploi($dateDebut, $dateFin)
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        $queryBuilder
+            ->leftJoin('p.emplois', 'e')
+            ->andWhere('e.id IS NULL OR (e.dateDebut > :dateFin OR e.dateFin < :dateDebut)')
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
