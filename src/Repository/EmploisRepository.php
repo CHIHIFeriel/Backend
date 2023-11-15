@@ -21,31 +21,6 @@ class EmploisRepository extends ServiceEntityRepository
         parent::__construct($registry, Emplois::class);
     }
 
-//    /**
-//     * @return Emplois[] Returns an array of Emplois objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Emplois
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-
     public function save(Emplois $emplois, $flush = true)
     {
         $em = $this->getEntityManager();
