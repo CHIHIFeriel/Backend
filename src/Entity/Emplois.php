@@ -30,6 +30,7 @@ class Emplois
     #[ORM\ManyToOne(inversedBy: 'emplois')]
     private ?Personnes $personne = null;
 
+    #[Groups("Emplois")]
     public function getId(): ?int
     {
         return $this->id;
