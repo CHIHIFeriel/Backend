@@ -48,23 +48,19 @@ class EmploiController extends AbstractController
         return new JsonResponse(['message' => 'Emploi ajouté avec succès'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/getPersonne', name: 'add', methods: ['GET'])]
-    public function getPersonne(EmploisRepository $emploisRepository,SerializerInterface $serializer, Request $request){
-        try{
-            $params = json_decode($request->getContent(), true);
-            $personneId = $params['personneId'];
-            $dateMin = $params['dateDebut'];
-            $dateMax = $params['dateFin'];
-            if($personneId !== null && $dateMin !== null && $dateMax !== null){
-                $emplois = $emploisRepository->createQueryBuilder('e')->where('e.personne= :personneId')
-                ->andWhere('e.dateDebut >= :dateDebut')->andWhere('e.dateDebut <= :dateDebut')->setParameter('personneId',$personneId)
-                ->setParameter('dateDebut', $dateMin)->setParameter('dateFin', $dateMax)->getQuery()->getResult();
-                $data = $serializer->serialize($emplois, 'json', ['groups'=>'emplois']);
-                return new JsonResponse($data, 200);
-                }
-        }catch (\Exception $e){
-            var_dump($e->getMessage());
+
+
+    #[Route('/personnes', name: 'personnes_par_entreprise', methods: ['GET'])]
+    public function getPersonnesParEntreprise($nomEntreprise, EmploisRepository $emploisRepository, SerializerInterface $serializer): JsonResponse
+    {
+        try {
+            $personnes = $emploisRepository->findPersonnesParEntreprise($nomEntreprise);
+            $data = $serializer->serialize($personnes, 'json', ['groups' => 'emplois']);
+
+            return new JsonResponse($data, JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return new JsonResponse(['message' => 'Erreur lors de la récupération des personnes par entreprise', 'error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
-        return $this->json(['message'=> 'paramétre manquante']);
     }
+
 }
