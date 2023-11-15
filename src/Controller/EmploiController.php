@@ -50,17 +50,4 @@ class EmploiController extends AbstractController
 
 
 
-    #[Route('/personnes', name: 'personnes_par_entreprise', methods: ['GET'])]
-    public function getPersonnesParEntreprise($nomEntreprise, EmploisRepository $emploisRepository, SerializerInterface $serializer): JsonResponse
-    {
-        try {
-            $personnes = $emploisRepository->findPersonnesParEntreprise($nomEntreprise);
-            $data = $serializer->serialize($personnes, 'json', ['groups' => 'emplois']);
-
-            return new JsonResponse($data, JsonResponse::HTTP_OK);
-        } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'Erreur lors de la récupération des personnes par entreprise', 'error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
 }

@@ -33,6 +33,7 @@
       "ext-http": "*"
     },
     "require-dev": {
+        "nelmio/api-doc-bundle": "*",
         "symfony/maker-bundle": "^1.51",
         "symfony/webpack-encore-bundle": "^2.1"
     },
