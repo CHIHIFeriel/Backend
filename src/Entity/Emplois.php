@@ -2,11 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\EmploisRepository;
+use App\State\EmploiStateProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmploisRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(provider: EmploiStateProvider::class),
+        new Post()
+    ],
+    paginationEnabled: false,
+)]
 class Emplois
 {
 
@@ -16,12 +29,15 @@ class Emplois
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $nomEntreprise = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $post = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -30,7 +46,6 @@ class Emplois
     #[ORM\ManyToOne(inversedBy: 'emplois')]
     private ?Personnes $personne = null;
 
-    #[Groups("Emplois")]
     public function getId(): ?int
     {
         return $this->id;

@@ -42,4 +42,16 @@ class PersonnesRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function findPersonnesAvecEmploi(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.emplois', 'e')
+            ->where('e.dateDebut BETWEEN :dateDebut AND :dateFin')
+            ->orWhere('e.dateFin BETWEEN :dateDebut AND :dateFin')
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getResult();
+    }
 }

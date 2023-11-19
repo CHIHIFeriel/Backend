@@ -33,13 +33,13 @@ class EmploisRepository extends ServiceEntityRepository
 
     public function findPersonnesParEntreprise(string $nomEntreprise): array
     {
-        return $this->createQueryBuilder('e')
-            ->select('p')
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder
             ->join('e.personne', 'p')
             ->where('e.nomEntreprise = :nomEntreprise')
-            ->setParameter('nomEntreprise', $nomEntreprise)
-            ->distinct()
-            ->getQuery()
-            ->getResult();
+            ->setParameter('nomEntreprise', $nomEntreprise);
+
+            return $queryBuilder->getQuery()->getResult();
     }
+
 }

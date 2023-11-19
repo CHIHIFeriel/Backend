@@ -47,6 +47,7 @@ class Personnes
     private ?\DateTimeInterface $naissance = null;
 
     #[ORM\OneToMany(mappedBy: 'personne', targetEntity: Emplois::class)]
+    #[Groups(['personnes'])]
     private Collection $emplois;
 
     public function __construct()
@@ -98,6 +99,7 @@ class Personnes
     /**
      * @return Collection<int, Emplois>
      */
+    #[Groups(['personnes'])]
     public function getEmplois(): Collection
     {
         return $this->emplois;
